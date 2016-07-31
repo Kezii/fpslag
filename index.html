@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset="UTF-8">
+	<script src="pixi.min.js"></script>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+	<title>FPS/Hz explaination for Video Games</title>
+	<style>
+		html,
+		body {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			background: #000;
+			color: rgba(255, 255, 255, .84);
+			font-family: 'Roboto';
+		}
+
+		#text {
+			position: absolute;
+			margin-top: 100px;
+			width: 100%;
+			text-align: center;
+			color: #fff;
+			z-index: 2;
+		}
+
+		.container {
+			padding-top: 35px;
+			text-align: center;
+			width: 70%;
+			margin: auto auto;
+		}
+
+		.big {
+			font-size: 3em;
+		}
+
+		.medium {
+			font-size: 2em;
+		}
+
+		q {
+			display: block;
+			font-style: italic;
+		}
+
+		a {
+			text-decoration: none;
+			color: #33f;
+		}
+
+		img{
+			margin: 30px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container big">
+		This page is meant to demonstrate how the framerate/refresh-rate actually impacts on what you see on a computer monitor or TV.
+		<br> The major part of the
+		<span title="peasants">console</span> users, or uninformed pc users, keep saying something like:
+		<br>
+		<br>
+		<q>30 fps are cinematic</q>
+		<q>60 fps are enough</q>
+		<q>120 fps are useless</q>
+		<q>The eye sees no difference above X fps</q>
+
+		<br> Is this really true?
+	</div>
+
+	<div id="text">
+		<b><span id="fps">-</span></b> Fps
+	</div>
+
+	<div id="renderArea"></div>
+
+	<div class="container">
+		(i'm assuming that you have a decent enough browser to view the above thing, and a decent enough computer to run that stably your monitor refresh rate)
+
+	</div>
+	<div class="container big">
+		You are probably running this at ~60fps
+		<br> Do you think that 60 fps are enough?
+</div>
+	<div class="container medium">
+		What you are seeing now is this:<br>
+		<img src="aliasing.png"><br>
+		What you see in real life is more similar to this:<br>
+				<img src="smooth.png"><br>
+			<br>
+			So, are 60 fps enough?<br>
+
+
+	</div>
+
+	<div class="container medium">
+		<br> We're talking about an application of the
+		<a href="https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem" target="_blank">Nyquist–Shannon theorem</a>, saying "N fps is enough" is not true, for every N as big as you want, the displayed sequence will not be <i>realistic</i> as long
+		as there's an object that moves faster than a certain speed.
+		<br>
+		<br> That speed is determined by the framerate and the resolution, and when that speed is exceeded, <i>temporal aliasing</i> occurs, this means that the moving object skips some pixels, it teleports from a place to another in your screen.
+		<br>
+		<br> This is evident on the above example, on a normal setup with a big screen
+		the green circle teleports by 4-5 cm every frame, it's pretty difficult for
+		the human brain to believe that this is a moving object.
+		<br>This is not a matter of persistence of vision or other vision tricks,
+		like 99% of the people say, the only problem is to make our brain believe
+		that we are staring at a moving object, and not at a bunch of photos,
+		if you play super mario, or another slow game at 30 fps, maybe you won't have
+		much disconfort, because the difference between a frame and the next one is
+		pretty small (apart from jumps).
+
+		<br>If you play sonic (just to fit the above example), or another fast-paced game, at 30 fps, you are
+		going to have a bad time, the difference from a frame to another is much more
+		evident and you'll start losing immersion and important informations about
+		the game, it'll become harder for your brain to track and see what's happening
+		in the game world and thus harder and uncomfortable for you to play.
+		<br>Another edge case, if you look at you clock's hour hand, 1 fps are enough,
+		nobody complains "my clock lags", because the movement is so small you wouldn't notice,
+		it's smaller than the minimum distance your eye would notice.
+		<br><br>So, what is the speed beyond which you start losing information?
+
+	</div>
+
+	<br>
+	<br>
+	<div id="ball1"></div>
+		<div class="container big">Here it is.<br>
+		</div>
+	<div class="container medium">
+		This circle is moving one pixel at a time.</div>
+
+
+	<div class="container big">
+		Everything you see in your monitor that is faster than this, is actually skipping pixels, losing information, aliasing, lagging, etc...
+		<br>
+		<span style="color: #f00;">Seriously</span>
+	</div>
+
+	<div class="container medium">
+		That might not seem a big deal, but ideally you'd want to keep every object movement under 1px/frame (not considering spatial antialiasing, that actually increases your render resolution), otherwise you'll end up teleporting things around, losing information.
+		<br>
+
+	</div>
+	<br>
+	<div id="ball2"></div>
+	<div class="container medium"> This is skipping a pixel every frame</div>
+	<br>
+
+	<div id="ball3"></div>
+	<div class="container medium"> This is skipping 5 pixels every frame</div>
+	<br>
+
+	<div id="ball4"></div>
+	<div class="container medium"> This is skipping 10 pixels every frame</div>
+	<br>
+
+	<div class="container medium">
+		For the above examples, your brain and your vision are filling up the space, making a teleporting ball appear as a continuous movement, this is
+		<strong>NOT</strong>
+		realistic, try following the ball below with your eyes, or look at something still and see the ball lag around, that sucks, it's not like a real moving object at all.
+		<br>
+		<br> Motion blur can be added, but then you'll end up with a blurred moving thing, still not what you want.
+		<br>
+	</div>
+	<br>
+	<div id="ball5"></div>
+	<div class="container big">
+		Conclusion:
+	</div>
+	<div class="container medium">
+		Everyone that says "it's useless over X fps" is completely wrong, and playing a game at 25-30 fps like on modern "next gen" consoles is the worst gaming experience ever, it's gonna break your immersion and your accuracy, everyone that denies this is simply
+		misinformed, the same for those who say "120fps is useless", a difference exists and can be seen and distinguished by everyone.
+		<br>
+		<br> FPS > GFX
+	</div>
+
+
+
+
+</body>
+
+
+<script>
+	var width = window.innerWidth
+	|| document.documentElement.clientWidth
+	|| document.body.clientWidth;
+	
+	var height = window.innerHeight
+	|| document.documentElement.clientHeight
+	|| document.body.clientHeight;
+	
+	
+	var Counter = function(objid) {
+
+		this.time = 0;
+		this.lastUpdate = this.time;
+		this.framecount = 0;
+
+		this.tick = function() {
+			this.time = new Date().getTime();
+
+			this.framecount++;
+
+			if (this.time - this.lastUpdate > 1000) {
+
+				document.getElementById(objid).innerHTML = Math.round(this.framecount / 1);
+				this.lastUpdate = this.time;
+				this.framecount = 0;
+			}
+		}
+	}
+
+
+
+	var rotatingCircles = function() { //rotating circles example
+
+		var container = new PIXI.Container();
+		var renderer = PIXI.autoDetectRenderer(width, height);
+
+		renderer.view.style.display = "block";
+		document.getElementById("renderArea").appendChild(renderer.view);
+
+		// white circle
+		var circle = new PIXI.Graphics();
+		circle.beginFill(0xffffff, 1);
+		circle.drawCircle(30, 30, 15);
+		container.addChild(circle);
+
+		// red circle
+		var circle2 = new PIXI.Graphics();
+		circle2.beginFill(0xff0000, 1);
+		circle2.drawCircle(30, 30, 15);
+		container.addChild(circle2);
+
+		//	green circle
+		var circle3 = new PIXI.Graphics();
+		circle3.beginFill(0x00ff00, 1);
+		circle3.drawCircle(30, 30, 15);
+		circle3.position.y = document.body.offsetHeight * 0.7;
+		container.addChild(circle3);
+
+		var fpsCounter = new Counter("fps");
+
+		function animate() {
+			time = new Date().getTime();
+
+			fpsCounter.tick();
+
+			circle.position.x = (Math.sin(time / 400) + 1) * (document.body.offsetWidth - 50) / 2
+			circle.position.y = (Math.cos(time / 400) + 1) * (document.body.offsetHeight - 50) / 2
+
+			circle2.position.x = (Math.sin(time / 190) + 1) * (document.body.offsetWidth - 50) / 2
+			circle2.position.y = (Math.cos(time / 190) + 1) * (document.body.offsetHeight - 50) / 2
+
+			circle3.position.x = (Math.sin(time / 150) + 0.5) * (document.body.offsetWidth - 50)
+
+			renderer.render(container);
+			requestAnimationFrame(animate);
+
+		}
+		requestAnimationFrame(animate);
+	}()
+
+
+
+	function bouncingBall(renderArea, color, speed) { //rotating circles example
+
+		var container = new PIXI.Container();
+		var renderer = PIXI.autoDetectRenderer(width, 30);
+
+		renderer.view.style.display = "block";
+		document.getElementById(renderArea).appendChild(renderer.view);
+
+
+		var circle = new PIXI.Graphics();
+		circle.beginFill(color, 1);
+		circle.drawCircle(30, 30, 15);
+		circle.position.y = -15;
+		container.addChild(circle);
+
+
+		function animate() {
+			circle.position.x += speed;
+
+			if (circle.position.x > document.body.offsetWidth)
+				circle.position.x = 0;
+
+
+			renderer.render(container);
+			requestAnimationFrame(animate);
+		}
+
+		requestAnimationFrame(animate);
+	}
+
+
+	bouncingBall("ball1", 0xffffff, 1);
+	bouncingBall("ball2", 0xff0000, 2);
+	bouncingBall("ball3", 0x00ff00, 6);
+	bouncingBall("ball4", 0x0000ff, 11);
+	bouncingBall("ball5", 0x00ffff, 26);
+</script>
